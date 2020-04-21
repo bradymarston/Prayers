@@ -7,7 +7,7 @@ export const http = {
         const response: HttpResponse<T> = await fetch(
             request
         );
-        console.log(response);
+
         try {
             // may error if there is no body
             response.parsedBody = await response.json();
@@ -21,7 +21,7 @@ export const http = {
 
     get: async function <T>(
         path: string,
-        args: RequestInit = { method: "get", mode: "no-cors" }
+        args: RequestInit = { method: "get"}
     ): Promise<HttpResponse<T>> {
         return await http.request<T>(new Request(path, args));
     },
@@ -29,7 +29,7 @@ export const http = {
     post: async function <T>(
         path: string,
         body: any,
-        args: RequestInit = { method: "post", body: JSON.stringify(body), mode: "no-cors" }
+        args: RequestInit = { method: "post", body: JSON.stringify(body), headers: { "Content-Type": "application/json" } }
     ): Promise<HttpResponse<T>> {
         return await http.request<T>(new Request(path, args));
     },
@@ -37,14 +37,14 @@ export const http = {
     put: async function <T>(
         path: string,
         body: any,
-        args: RequestInit = { method: "put", body: JSON.stringify(body), mode: "no-cors" }
+        args: RequestInit = { method: "put", body: JSON.stringify(body), headers: { "Content-Type": "application/json" } }
     ): Promise<HttpResponse<T>> {
         return await http.request<T>(new Request(path, args));
     },
 
     delete: async function <T>(
         path: string,
-        args: RequestInit = { method: "delete", mode: "no-cors" }
+        args: RequestInit = { method: "delete" }
     ): Promise<HttpResponse<T>> {
         return await http.request<T>(new Request(path, args));
     }

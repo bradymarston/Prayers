@@ -1,14 +1,19 @@
 import { observable, action, computed } from "mobx";
+import { Credentials } from "./components/LoginForm";
+import { http } from "../httpHelpers";
 
 export class UserStore {
     @observable
     private _name: string | null = (() => { console.log("Fetching local storage"); return localStorage.getItem("user-name"); })()
 
     @action
-    login(newName: string) {
-        console.log("Initiating login");
-        localStorage.setItem("user-name", newName);
-        this._name = newName;
+    login(credentials: Credentials) {
+        return http.post("authentication/login", credentials).then((response) => {
+            if (response.ok) {
+                localStorage.setItem("user-name", credentials.userName);
+                this._name = credentials.userName;
+            }
+        });
     }
 
     @action
@@ -27,7 +32,6 @@ export class UserStore {
 
     @computed
     get isLoggedIn(): boolean {
-        console.log("Checking login state.");
         return this._name !== null;
     }
 }
